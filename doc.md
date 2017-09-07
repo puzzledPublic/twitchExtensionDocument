@@ -16,3 +16,17 @@ Extension은 몇개의 컴포넌트를 가집니다.
 2가지 유형의 Extension:
 * Video Player 아래 Panal 영역에 위치하는 Panal Extension.
 * 투명한 오버레이로써 Video Player 상에 위치하는 Video-Overlay Extension.
+
+### 스트리머 체험
+스트리머는 대시보드의 Extension Manager 탭에서 Extension의 목록을 볼 수 있으며 설치 할 수 있습니다. Extension의 추가, 제거 및 동작 여부를 제어 할 수 있습니다.
+<br><br>
+Extension 설치를 한다고 해서 작동을 하지는 않습니다. 작동을 위해 스트리머는 Extension 설정(개발자가 필요로 한다면)을 해야합니다. 그 다음 Extension을 활성화 하면 시청자에게 보여지게 됩니다.
+
+### 도움이 필요하다면..
+이 문서에 문제가 있거나 정보가 더 필요하거나 질문이 있으시다면 [Extensions category of the Twitch Developer Forums](https://discuss.dev.twitch.tv/c/extensions) 에 방문해주세요.
+
+Architecture Overview
+=====================
+![Alt text](https://media-elerium.cursecdn.com/attachments/215/369/extensionsguide-architecture.png)
+Extension은 iframe 입니다. 일반적으로 Extension은 AJAX를 이용해 Extension Backend Service(EBS)와 커뮤니케이션을 합니다.
+EBS는 Extension 개발자가 개발, 배포, 유지보수 하는 웹 서비스입니다.
