@@ -8,7 +8,7 @@ Extension은 몇개의 컴포넌트를 가집니다.
 * 시청자가 체험 가능한 HTML/JavaScript를 이용한 프론트 엔드.<br>
   이것은 스트리머 방송 페이지에 iframe(inline frame)으로 만들어 집니다.
 * (Optional) 스트리머가 체험 가능한  HTML/JavaScript를 이용한 프론트 엔드.<br>
-  이것은 스트리머 대시보드 페이지에 iframe으로 만들어집니다. 스트리머는 방송 중 특별한 명령(ex: 투표)를 지시가 가능합니다.
+  이것은 스트리머 대시보드 페이지에 iframe으로 만들어집니다. 스트리머는 방송 중 특별한 명령(ex: 투표)이 가능합니다.
 * (Optional) Extension Backend Service(EBS).<br>
   프론트 엔드와 커뮤니케이션 가능하고 데이터 및 상태를 저장 할 수 있는 backend 웹 서비스를 지칭합니다. 모든 시청자에게 데이터를 보내기 위해 AJAX 요청을 받거나 트위치의 PubSub 아키텍처를 사용할 수 있습니다. 
 
@@ -139,3 +139,20 @@ Extension 설명, 요약, 제작자 이름, 로고를 변경하기 원하면 **S
 
 Managing Extension Versions
 ===========================
+**Create Extension**을 클릭한 후 **Version** 탭의 **Version Status** 섹션으로 이동합니다. 여기서 Extension 생명주기 상에 있는 Extension 상태를 볼 수 있고 필요하면 상태를 변경할 수 있습니다. 왼쪽 네비게이션 바에는 Extension 버전을 관리를 위한 추가적인 섹션을 볼 수 있습니다. 이는 아래에 설명합니다.
+
+### Version Assets
+자원(assets)을 트위치 CDN에 업로드할 준비가 됐다면 압축한 후 **Version Assets** 섹션에 업로드 하세요. 자원을 트위치 CDN에 업로드하기 전까지는 Extension Review 요청을 할 수 없습니다. 정보가 더 필요하다면 [Hosted Test](#hosted-test)을 참조하세요.
+
+### Extension Capabilities
+각 Extension은 고유합니다. 트위치는 Extension의 능력(potential)을 최대화하기 위한 선택가능한 보조기능(capabilities)을 가지고 있습니다. 이는 **Extension Capabilities** 섹션에 있습니다.
+
+* 자신의 Extension이 시청자의 트위치 숫자 ID를 알아야 한다면 **Request Identity Link** 박스에 체크하세요. 시청자가 트위치 ID 공유에 동의한다면 Extension Helper의 <code>onAuthorized()</code> 콜백 함수로 트위치 숫자 ID가 제공됩니다. 콜백 함수나 JWT 토큰에 대해 자세히 알고 싶다면 [Extensions Reference](https://dev.twitch.tv/docs/extensions/reference)를 참조하세요.
+
+* 스트리머가 Extension을 활성화 하기 전에 적절하게 설정하도록 요구할 수 있습니다. 활성화된 Extension이 잘못 설정되어 시청자에게 혼란스런 에러 메시지를 출력하는 경우 유용합니다. **Required Configurations** 필드에 작성해서 스트리머 설정 요구사항을 강제할 수 있습니다. 이 필드에는 자신이 원하는 문자열 컨텐츠를 작성 가능합니다. [Creating Your Extension Backend Service (EBS)](#creating-your-extension-backend-service-ebs) 에서 더 다룹니다.
+
+* 자신의 어플리케이션이 스트리머를 대신하여 동작을 수행해야 한다면 필수적으로 OAuth 범위가 **Required Broadcaster Ablities** 에 추가돼야 합니다. 콤마로 구분된 OAuth 범위 리스트를 이용하여 명시된 리다이렉트 URI의 인가 요청이 설정됩니다. 그리하여 사용자가 어플리케이션 요청 범위를 허용하면 리다이렉트 URI를 통해 사용자의 토큰이 개발자에게 보내집니다. ([범위 리스트(list of scopes)](https://dev.twitch.tv/docs/v5/guides/authentication/#scopes)에 대한 트위치 인증 가이드 참조), [Creating Your Extension Backend Service (EBS)](#creating-your-extension-backend-service-ebs) 에서 더 다룹니다.
+
+* (Optional) 설정 또는 panel의 주요 기능으로써 외부 URL 접근이 필요하다면 **Whitelisted Config URLs** 또는 **Whitelisted Panel URLs** 내에 URL 리스트를 작성하세요. Video-Overlay Extension에서는 외부 사이트 링크하는 것을 절대 금합니다.
+
+### Asset Hosting
