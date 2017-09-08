@@ -27,7 +27,7 @@ Extension 설치를 한다고 해서 작동을 하지는 않습니다. 작동을
 Architecture Overview
 =====================
 ![Alt text](https://media-elerium.cursecdn.com/attachments/215/369/extensionsguide-architecture.png)
-Extension은 front-end **iframe** 입니다. 일반적으로 Extension은 AJAX를 이용해 **Extension Backend Service(EBS)**와 커뮤니케이션을 합니다.
+Extension은 front-end **iframe** 입니다. 일반적으로 Extension은 AJAX를 이용해 **Extension Backend Service(EBS)** 와 커뮤니케이션 합니다.
 (EBS는 Extension 개발자가 개발, 배포, 유지보수 하는 웹 서비스입니다.)
 <br>
 
@@ -79,3 +79,63 @@ Design Best Practice
 
 ### Video Overlay Design Considerations
 Video-Overay Extension은 시청자의 경험을 향상시키는데 있습니다. 그렇기에 각 Extension 요소는 중요한 real estate를 포함한다는 것을 알고 있어야 합니다.
+
+* **사이즈 조절(Sizing)** — Extension UI를 디자인 할때 브라우저나 video player 크기를 조절하는 경우 UI도 그에따라 바뀌어야 함을 고려하세요. 기본적으로 Video-Overlay Extension은 스트리머가 방송중인 동안 모든 크기에서 동작합니다. Extension이 동작하지 않을 정도로 크기가 작아지는 경우 Extension을 숨기는 것도 고려하세요.
+
+* **(Covering up player elements)** — Extension UI 요소가 트위치 video player 크기를 넘는다면 작동하지 않을 수 있습니다. 다음은 Video-Overlay Extension을 디자인할때 고려해야하는 영역의 다이어그램입니다.
+
+![Alt text](https://media-elerium.cursecdn.com/attachments/215/371/extensionsguide-videoplayerelements.jpg)
+
+* **iFrame 경계(iFrame boundaries)** — 드래그 앤 드랍 요소를 위해 시청자가 어떤 요소를 video player 화면 밖으로 이동시킬때 Video-Overlay Extension이 어떻게 반응할 것인지 고려하세요. 화면 밖으로 요소가 이동하는 것을 막거나 튕기도록하여(spring) 화면 안으로 들어오도록 만드세요.
+
+* **비활성화(Disabling)** — 스트리머가 방송을 끄거나 다른 채널로 호스팅을 하면 Video-Overlay Extension은 스스로 비활성화됩니다. 시청자가 영상을 정지시키면 Extension iframe은 시청자가 영상 정지를 풀때까지 숨겨진 상태가 됩니다.
+
+* **플레이어 조작 계층(Player control layers)** — Video-Overlay Extension은 모든 video player 조작 계층의 아래에 존재 한다는 것을 명심하세요. video player 조작 계층은 팝업메뉴, 마우스 오버, LIVE 표시자, 화면 좌상단에 나타나는 채널 정보를 포함합니다. 극장 모드, 꽉찬 화면, embed 화면들은 보통의 트위치 player와는 다른 레이아웃 UI를 가지는 것을 명심하세요.
+
+![Alt text](https://media-elerium.cursecdn.com/attachments/215/370/extensionsguide-extensionlayers.jpg)
+
+Extension Life Cycle
+====================
+각각의 Extension은 개발자 사이트의 **Extensions** 섹션 내에서 독립적으로 관리됩니다. 각각의 버전을 위해 **Version Status** 탭에서는 자신의 Extension 생명주기를 컨트롤 할 수 있도록 도와줍니다.
+
+모든 Extension의 모든 버전은 **Local Test**로 시작합니다. 현재버전이 Local Test중인 동안 모든 자원(HTML, JavaScript, CSS, images, fonts 등)은 미리 정의된 테스트 URI를 통해 제공됩니다. 
+
+개발자가 로컬에서 테스트한 버전에 만족했다면 **Hosted Test**로 변환합니다. 이것은 Extension의 모든 자원들을 트위치 CDN에 업로드하여 트위치에서 제공할때도 Extension이 잘 작동하는지를 개발자가 확인할 수 있습니다. 몇몇 유효검사(sanity check)는 업로드하며 이루어집니다. (ex: 아이콘 확인, 스크린샷이 적절한 크기인지) Local Test 또는 Hosted Test 도중 Extension은 테스트 계정 목록을 제공 받은 개발자와 트위치의 몇몇 스태프에게만 노출됩니다.
+
+Hosted Test가 완료되면 개발자는 **Review**를 위해 Extension을 제출할 수 있습니다. 원하는 횟수만큼 Review를 요청할 수 있습니다. 하지만 한번에 하나의 버전만 Review가 가능합니다. Extension이 제출된 상황에서 Extension을 바꾸고 싶다면 Hosted Test로 되돌린 후 자원을 다시 업로드 하는 방법 밖에 없습니다. Review가 진행되는 동안 모든 테스트 계정은 전처럼 Extension 테스트를 할 수 있습니다. 
+
+트위치가 Extension Review를 마친 후에는 다음 3가지 상태 중 하나의 상태가 됩니다.
+* 보류(Pending Action) — 수정이 요구되는 상태입니다. 제공한 제작자 email 주소로 승인되지 않은 이유가 보내집니다. 개발자는 Extension을 테스트 상태로 되돌리고 문제를 수정하여 Review 재요청을 할 수 있습니다. 새로운 버전을 생성할 필요는 없습니다.
+
+* 거부(Rejected) — Extension 부적절하고 어떤 상황에든 받아들여지지 않는 상태입니다. Extension의 클라이언트 ID(고유 식별자) 영구적으로 취소됩니다. 거부는 영구적이며 종결된 상태입니다.
+
+* 승인(Accepted) — 개발자가 언제든 Extension을 상용화 할 수 있음을 알립니다. 승인된 Extension은 필요하다면 테스트 상태로 되돌릴 수 있습니다. 하지만 그럴경우 Review 과정을 다시 거쳐야합니다. 
+
+상용화 하기 위해 개발자는 승인된 버전 Extension에서 Release 버튼을 클릭하면 됩니다. Extension이 공식적으로 노출되며 더 이상 업데이트 할 수 없습니다. 새로운 버전으로 교체만 가능합니다. 새로운 버전이 **출시**되면 이전에 출시된 어느 버전이든 **폐기 대상**으로 이행됩니다. 그리고 Extension 설치도 바로 업그레이드 됩니다.
+
+새로운 버전이 출시되면 개발자는 :
+* 몇몇 시청자 또는 스트리머는 잠시 옛 버전을 사용하게 된다는 것을 알아야합니다.
+* EBS가 아직 바뀌지 않은 옛 버전의 트래픽을 처리할 수 있음을 보장해야합니다.
+
+Creating Your Extension
+=======================
+Extension 개발을 시작하기 위해 트위치 개발자 사이트를 이용하게 됩니다. 이곳에서 Extension을 개발, 관리, 리뷰를 하게 됩니다.
+1. 자신의 트위치 ID로 [트위치 개발자 사이트](https://dev.twitch.tv/)에 로그인 합니다.
+2. [Extensions](https://vulcan.curseforge.com/dashboard/extensions) 페이지로 이동한 후 **Create Extension**을 클릭하세요.
+3. Extension 생성 신청서 양식을 완성해주세요.
+   * **이름(Name)** — Extension의 이름. 변경할 수 없으니 신중히 작성해주세요.
+   * **유형(Type of Extension)** — Panel 또는 Video-Overay 중에 선택하세요.
+   * **요약(Summary)** — 스트리머가 Extension Manager 탭 안에 있는 Extension 목록에서 볼 수 있는 문장입니다. Extension이 무엇을 하는지 간략히 1~2 문장으로 작성하세요. 더 많은 정보를 제공하기 위해선 설명(Description) 필드를 사용하세요.
+   * **설명(Description)** — 요약보다 더 자세한 Extension의 기능을 작성하세요.
+   * **제작자 이름(Author name)** — Extension Manager 탭에서 돈을 받게 될 제작자 또는 회사 성명을 작성하세요. 나중에 변경 가능합니다.
+   * **제작자 이메일(Author email)** — Extension 제작자와 연락 정보를 작성하세요. Extension 생명주기(ex: 거부/승인 알림) 정보를 주고 받기 위해 사용됩니다. 트위치는 절대 누구에게도 이메일을 공개하지 않습니다.
+   * **보조 이메일(Support email)** — 스트리머로 부터 질의를 받을 공개 이메일을 작성하세요.
+4. (Optional) Extension의 로고를 추가하세요. 크기는 100px * 100px여야 합니다. 트위치 또는 Glitch 로고를 사용하지마세요. 만약 로고를 설정하지 않으면 기본 로고가 할당됩니다.
+5. **Create Extension**을 눌러 Extension을 생성하세요. 생성 직후 확인 이메일을 받게됩니다.
+
+Extension을 생성했습니다. 축하드립니다! 제공한 제작자 이메일 주소의 소유권자인지 확인하기 위해 이메일을 확인해주세요.
+
+Extension 설명, 요약, 제작자 이름, 로고를 변경하기 원하면 **Settings** 탭을 클릭하세요. 이런 필드들은 특정 버전에 종속되지 않습니다. : Extension의 모든 버전에 적용됩니다.
+
+Managing Extension Versions
+===========================
