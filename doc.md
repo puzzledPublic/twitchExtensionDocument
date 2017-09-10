@@ -242,7 +242,7 @@ EBS는 Extension Helper가 서명한 토큰을 확인하는 것 외에도 JWT �
 
 필드 : 
 * `exp` 는 토큰이 만료되는 시간입니다. (UNIX epoch timestamp : 1970년 1월 1일을 기준으로 하는 1초 단위 시간) 잠재적 positive time drift를 다루기 위해서 버퍼를 제공해야 함을 명심하세요.
-* `user_id` 는 Extension을 소유하는 트위치 사용자 ID입니다. 
+* `user_id` 는 Extension을 사용하는(owns) 트위치 사용자 ID입니다. 
 * `role` 는 `external`로 설정합니다.
 
 이 필드들에 대한 자세한 정보는 Extensions Reference의 ["JWT Schema"](https://dev.twitch.tv/docs/extensions/reference#jwt-schema) 섹션을 참조하세요.
@@ -311,3 +311,73 @@ Extension을 생성하고 보조기능(capabilities) 세팅이 완료됐다면 �
 업로드에 대한 문제 발생시 (파일 접근 불가, 부적절한 이미지 크기 등) 이메일로 알림이 보내집니다. 알림을 받기 위해서는 Extension 생성시 반드시 제작자 이메일(Author email)을 작성하세요. Extension을 생성하면 확인 메일을 받게됩니다. 확인 메일 안에 링크를 클릭하세요. 그렇지 않으면 파일업로드 문제, Extension 승인 등의 알림 이메일을 받을 수 없습니다. 
 
 ### Submitting Your Extension for Review
+트위치 CDN으로 Extension이 잘 작동한다면 review를 위한 제출 준비가 됐습니다. 제출하기 전 해당 Extension 버전의 **Version Details** 에 있는 **EULA or Terms of Service URL** 과 **Privacy Policy URL** 필드를 작성해주세요. 
+
+**Screenshots** 섹션에 Extension이 작동하는 이미지를 업로드 하도록 권장합니다. 이미지는 PNG, JPG 또는 GIF 중에 가능합니다. 최소(권장) 크기는 1024 * 768 입니다. 이미지는 반드시 4:3 비율이어야 합니다. Extension을 제출하기전 최소 하나 이상의 이미지를 업로드 하도록 권장합니다.
+
+Extension을 제출하기 전 반드시 해당 버전의 **Review Details** 섹션을 작성해주세요. 다음의 필드와 문제에 대해 각별히 주목하세요.
+* **Name of Channel for Review** — review 과정에 사용할 채널 URL를 작성하세요. 트위치가 리뷰를 마치기 위해선 승인이 될때까지는 트위치 채널 페이지에서 시연되고 전체 기능이 동작하는 버전이 요구됩니다. 또한 Extension이 작동하는데 실제 데이터(live data)가 요구된다면 트위치 리뷰어들이 Extension의 전체적인 기능을 사용할 수 있도록 필수 데이터(necessary data)로 시뮬레이션 해주세요. 
+* **Walkthrough Guide and Change Log** — 빠른 리뷰를 위해 Extension 기능에 대한 명확하고 철저한 검토(Walkthrough) 가이드 문서 제공을 매우 권장합니다.
+
+   만약 새로운 버전의 출시라면 변경 로그(change log)를 포함해주세요.
+
+   검토 가이드 및 변경 로그를 제공하지 않으면 리뷰 시간이 늘어나거나 거부 당할 수 있습니다. 
+
+**Review Details** 섹션을 작성한 후 자원을 업로드한 버전의 **Version Status** 섹션에서 **Mark In Review** 을 클릭하면 Extension 제출이 가능합니다.
+
+### Do’s and Don’ts
+스트리머와 시청자들이 Extension으로 좋은 체험할 수 있도록 트위치는 개발자가 반드시 지켜야 할 정책을 가집니다. 리뷰 과정동안 트위치는 Extension이 정책을 위반하는지 검사합니다. *정책을 위반하는 Extension은 거부됩니다.*
+
+모든 정책 리스트는 **Guidelines and Policies** 를 참조하세요. 리뷰 하기 전에 대한 대부분의 공통 이슈는 리스트 아래쪽에 있습니다. 리뷰 시간과 거부 가능성을 최소화 하기 위해 다음의 모든 단계를 따라주세요.
+
+해야 하는 것:
+* 난독화 되지 않은, 사람이 읽을 수 있는 코드로 제출하세요.
+* 첫 JavaScript 파일로서 트위치 Extension Helper를 포함하세요.
+* 리뷰 기간동안 테스트 방송에서 Extension의 모든 기능들에 접근할 수 있도록 하세요.
+* Extension에 대한 요약과 설명을 정확히 작성하세요.
+* 사용자들이 Extension에서 클릭 가능한, 보여지는 URL들은 모두 [Extension Capabilities](#extension-capabilities) 섹션에 작성하세요.
+* 요구되는 모든 곳에 HTTPS 프로토콜을 사용하세요.
+* 자신의 Extension이 OAuth가 필요하다면 Extension 설정에서 `required_broadcaster_abilities` 필드에 필수 OAuth 범위(scope)를 작성하세요.
+* 트위치 Extension CDN으로만 JavaScript, CSS를 로드하세요.
+* 리뷰 도중엔 Extension과 Extension backend는 안정적 상태를 유지해야 합니다.
+
+다음과 같은 Extension은 제출하지 마세요 : 
+* Video-Overlay Extension에서 브라우저 창을 여는 링크를 가지는 경우
+* Extension에서 소리(음악, 음성)가 재생되는 경우
+* 광고나 스폰서 컨텐츠를 포함하는 경우(개발자 자신의 브랜딩 제외)
+* 트위치, 아마존이 소유, 운영하지 않는 사이트에 접속이나 행동을 유도하는 경우
+* 트위치 플랫폼 밖에서 업그레이드 판을 판매하는 경우
+* Extension 링크로 이동한 페이지에서 물건을 판매하는 경우
+* 플래시, 브라우저 Extension 또는 브라우저 플러그인을 사용하는 경우
+* 어떠한 방법으로 pop-up 경고를 사용하는 경우
+* JavaScript 코드에서 <code>eval</code> 을 사용하는 경우
+* HTML 파일 내에서 iframe을 생성하는 경우
+* 브라우저 창에서 곧바로 AJAX를 렌더링하는 경우
+* <code>console.log</code> 명령이 있는 경우
+* 아래 항목을 제외한 트위치 사용자 데이터를 수집하거나 저장하는 경우 
+   * 트위치 플랫폼에 독점적인 어플리케이션, 트위치 사용자 경험을 향상시킬 수 있는 명백한 혜택을 만들 경우
+   * 운영상의 커뮤니케이션이 필요한 경우, 예를들면 사용자들이게 디지털 아이템을 상환하는 경우 또는 고객서비스 목적 업데이트를 사용자에게 알리는 경우
+   * 정기적으로 홍보용 자료를 전송하거나 어플리케이션의 기능, 혜택 알림을 모든 트위치 사용자에게 보내는 경우 (사용자가 홍보용 자료를 거절할 수 있는 메커니즘을 제공하고 통신의 주요 목적이 경쟁 제품 또는 플랫폼을 유도하거나 홍보하는 것이 아닌 경우에 한해서 가능)
+   * 트랜잭션 과정에서 필요한 경우
+
+### Making Changes
+Extension이 리뷰인 중에는 어떠한 버전의 자원이나 설명을 수정할 수 없습니다. 수정이 필요한 경우 **Return to Testing**을 클릭하여 테스트 버전으로 되돌리세요. 수정을 한 후에는 트위치 CDN으로 수정된 자원을 업로드하세요. 그 다음 리뷰를 재신청하세요. 이 경우 리뷰 순서는 초기화 됩니다.
+
+Releasing Your Extension
+========================
+Extension이 승인됐다면 승인된 버전의 **Release** 버튼을 클릭하여 상용화(release) 할 수 있습니다. 이전 버전의 Extension이 상용화 상태라면 자동적으로 폐기대상(Deprecated) 상태로 변경됩니다. Extension은 동시에 하나의 버전만 상용화 상태에 있게됩니다.
+ 
+Updating Your Extension
+=======================
+상용화 된 Extension을 업데이트 하기 위해선 반드시 Extension의 새로운 버전을 만들고 리뷰 제출을 해야합니다. 새로운 버전을 만들기 위해 관리하고자 하는 Extension에서 **Versions** 탭을 클릭하세요. Extension의 모든 버전과 상태들이 표에 표시됩니다.
+
+새 Extension 버전이 승인됐다면 스트리머가 사용할 수 있게 상용화 할 수 있습니다. 이전 버전은 사용 중지가 되고 **Version Status** 페이지 하단에서 확인할 수 있습니다.
+
+Deleting Your Extension
+=======================
+Extension을 더 이상 지원하지 않겠다고 결정했다면 해당 Extension **Settings** 섹션에서 **Delete Extension**을 클릭하세요. 이는 모든 스트리머의 Extension Manager 페이지에서 자신의 Extension을 제거합니다.
+
+특정 버전의 Extension을 삭제하는 것은 불가능합니다. **삭제된 Extension은 복구할 수 없습니다.**
+
+Guidelines and Policies
+=======================
