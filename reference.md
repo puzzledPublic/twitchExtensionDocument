@@ -1,9 +1,4 @@
-<style>
-table th{
-    background-color : #dad8de;
-    color : black;
-}
-</style>
+
 Extension Reference
 ===================
 이 레퍼런스는 Extension endpoints, [Javascript Helper](#javascript-helper), [JWT schema](#jwt-schema)에 대해 설명합니다.
