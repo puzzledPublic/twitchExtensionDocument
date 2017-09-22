@@ -447,7 +447,7 @@ Guidelines and Policies
 ### Content Security Policies
 시청자, 스트리머의 프라이버시와 보안을 위해 트위치는 컨텐츠 보안 정책을 적용합니다. 개발 도중에 콘솔에서 다음과 같은 문구를 볼 수 있습니다.
 <pre></code>Refused to load the stylesheet 'https://somedomain.net/bad.css' because it violates the following Content Security Policy directive: "style-src 'self' https://fonts.googleapis.com".</code></pre>
-자원(resource)을 로드하기 위해 차단된 요청에 주목하고 그에따라 Extension을 업데이트 하세요.
+요청이 거부된 이유를 보고 자원(resource)을 로드하기 위해 그에따라 Extension을 수정 하세요.
 
 기본적으로 다음의 경우를 제외하고 모든 자원은(assets) 트위치 CDN으로 로드돼야 합니다.
    * HTTPS 또는 WSS endpoint와 연결할때 (ex : XHR의 목적으로)
@@ -457,6 +457,6 @@ Guidelines and Policies
 또한 다음과 같은 제약사항을 따릅니다.
    * 인라인(inline) JavaScript를 사용할 수 없습니다.
    * HTTPS 또는 WSS와 같은 암호화된 프로토콜을 사용하지 않는 자원에는 접근이나 로드를 할 수 없습니다.
-   * Extension 존재하는 곳 외의 공간에서 Extension을 내장할 수 없습니다.
+   * Extension이 존재하는 곳 외의 공간에서 Extension을 내장할 수 없습니다.
 
 더 자세한 사항은 https://content-security-policy.com 을 참조하세요.
