@@ -381,3 +381,82 @@ Extension을 더 이상 지원하지 않겠다고 결정했다면 해당 Extensi
 
 Guidelines and Policies
 =======================
+### Technical Guidelines
+상용화된 Extension은 반드시 트위치 CDN으로 부터 모든 HTML, JavaScript, CSS 파일이 배포 돼야 합니다. 트위치 서버로 배포될 스트리머, 시청자의 HTML, JS, CSS 파일을 제작한다면 다음 가이드 라인을 준수하세요. 그렇지 않으면 Extension은 승인되지 않을 것입니다.
+* <code>eval()</code> 을 사용하지마세요. 만약 <code>eval()</code> 를 사용하는 라이브러리에 의존하고 있다면 코드를 축소한(minified) JavaScript로 만들지 말고 <code>eval()</code> 의 출처가 어딘지 트위치 리뷰어가 알 수 있도록 따로 두세요.
+* 리뷰를 위해 Extension을 제출하기 전에 Javascript의 모든 콘솔에 로깅하는 코드(console.log)를 제거하세요.
+* 가능하면 언제라도 <code>.html</code> 파일에 모든 텍스트를 넣으세요. 문자열에서 동적으로 문자를 변경해야 하는 경우 가능하면 JavaScript 파일에 동적 문자열을 열거하세요. (불가능한 경우도 있습니다.)
+* AJAX를 통해 동적으로 얻은 데이터를 즉시 DOM안에 삽입하지 마세요. (ex : JSON은 가능, HTML은 불가)
+* HTML5와 UTF-8을 사용하세요.
+* 다음의 브라우저를 지원하세요.
+   * IE11(Windows)
+   * 최신 2개 버전의 Chrome(OS X, Windows)
+   * 최신 2개 버전의 Firefox(OS X, Windows)
+   * Safari 9(OS X)
+* HTML 파일에 첫 JavaScript 파일로 트위치 Extension Helper를 포함하세요. 트위치 CDN으로 얻을 수 있습니다. https://extension-files.twitch.tv/helper/v1/twitch-ext.min.js
+* Extension이 시청자를 위한 동작을 위해 써드파티 다운로드를 요구할 순 없습니다. (스트리머를 위해 추가적으로 요구되는 소프트웨어는 허용됩니다.)
+* Extension의 모든 Javascript와 CSS 자원은 업로드 돼야 합니다.
+* 리뷰를 위해 제출된 JavaScript 파일은 코드 축소(minified) 할 수 있지만 난독화(obfuscated) 하면 안됩니다.
+* Extension은 소리를 재생하거나 그럴의도가 있는 코드를 포함할 수 없습니다.
+* HTTPS를 사용하여 모든 자원(images, fonts 등)을 로드하세요.
+* Extension은 Flash를 사용할 수 없습니다.
+* Extension은 입력으로 더블클릭을 사용할 수 없습니다.
+* Extension은 iframe을 사용할 수 없습니다.
+* PubSub 트래픽은 다음의 제한을 준수해야 합니다.
+   * 한 채널에 초당 하나의 메시지
+   * 5KB 메시지 크기
+
+### Localization Guidelines
+개발자는 Extension의 front-end에 적절한 지역화(localization) 할 책임이 있습니다. 다음과 같은 방식으로 클라이언트 언어를 명시하세요.
+* Extension의 URL 로딩에서 `language` 쿼리 파라미터를 사용 (ex : <code>https://<ext-id>.ext-twitch.tv/<ext-id>/<version>/viewer.html?language=en</code>) 
+* `context` 콜백에 있는 `language` 필드 사용
+
+### Content Policies 
+모든 Extension은 콘텐츠 정책을 반드시 준수해야 합니다. Extension 리뷰 중 콘텐츠 정책에 반하는지 검사하며 준수하지 않는 경우 거부될 수 있습니다. 
+* Extension 개발자는 [Developer Services Agreement](https://www.twitch.tv/p/developer-agreement) 와 [Terms of Service](https://www.twitch.tv/p/terms-of-service) 를 반드시 준수해야 합니다. 
+* 회사 또는 개인으로 제출된 모든 Extension은 하나의 트위치 계정으로 생성해야 합니다. 
+* 상업(Commerce) :
+   * Extension은 스트리머에게 보상을 받는 대가로 차별화된 경험 및 기능을 제공할 수 있습니다. (ex : 특정 기능에 권한 별 접근(tiered access), 구매가능한 기능 추가 플러그인)
+   * Extension은 시청자에게 보상을 받는 대가로 차별화된 경험 및 기능을 제공할 수 없습니다. (트위치/아마존 commerce instruments 사용과 관련된 것은 제외)
+   * Extension은 트위치/아마존 commerce instruments와 관련되지 않은 곳과의 금전 거래 및 금전 거래 유도를 할 수 없습니다.
+* 어느 Extension에서든 정적 또는 동적의 광고 컨텐츠를 게시할 수 없습니다.
+* 사이트 밖으로의 링크(Off-site linking)
+   * Video-Overlay Extension은 어떠한 종류의 링크든지 포함할 수 없습니다.
+   * Panel Extension은 반드시 사이트 밖의 링크를 사용하기 위해 도메인 whitelist를 작성해 제출해야 합니다.
+   * 사이트 밖으로의 링크는 반드시 Extension의 핵심 기능과 연관돼야 합니다.
+   * 트위치 tv와 실질적으로 유사한 기능을 제공하는 사이트로의 링크는 사용 불가능 합니다. 
+* Extension의 기본설정, 기능설정은 반드시 각각 Extension 설정 페이지, live 대시보드 iframe 페이지에서 관리돼야 합니다.
+* Extension은 사용자가 트위치 외의 사이트에서 트위치의 컨텐츠를 사용하도록 유도하거나 사용에 대해 보상할 수 없습니다.
+* Extension은 사용자가 트위치/아마존 소유물 외에 대한 특정 행동을 하도록 유도하거나 그 행동에 대해 보상할 수 없습니다.
+* Extension은 시청자들에게 OAuth 권한를 요청하거나 요구할 수 없습니다.
+* Extension은 사용자가 서비스 규약을 위반 하도록 유도하거나 위반 가능하게 할 수 없습니다. 예를 들어 : 
+   * 성적 컨텐츠 명시
+   * 폭력, 괴롭힘, 욕설 유도
+   * 사기, 타인 사칭
+   * 불법적 활동 
+* Extension은 키보드 단축키로 기능을 수행할 수 없습니다.
+* Extension의 컨텐츠 내에서 트위치 브랜드, 트위치 로고, 트위치 Glitch를 사용할 수 없습니다.
+* Extension은 트위치의 보안, 안전 예방책을 무력화 하는 악의적인 코드를 포함할 수 없습니다.
+* Extension은 지적재산권을 존중해야 합니다. Extension 개발자는 지적재산권 위반으로 제기되는 주장(claim)에 대해 책임이 있습니다. 그 주장이 해결될때까지는 Extension은 제거된 상태가 될 것입니다.
+* Extension의 타이틀, 설명, 메타데이터에 Extension과 관련없거나 오해할만한, 그리고 과도한 표현을 사용할 수 없습니다. 
+* Extension 목록(listing)에 Extension의 기능을 정확하고 완벽하게 설명해야 합니다.
+* 모든 Extension은 하나의 아이콘과 최소 하나 이상의 front-end를 나타내는 스크린샷을 포함해야 합니다.
+* 개발자는 Extension Manager 페이지 또는 훗날 Extension 검색 메커니즘을 가진 페이지에서 Extension의 위치 순서를 조작하려 시도해서는 안됩니다.
+* 트위치는 언제든, 어떤 이유로든 Extension을 제거 할 권리를 가집니다.
+
+### Content Security Policies
+시청자, 스트리머의 프라이버시와 보안을 위해 트위치는 컨텐츠 보안 정책을 적용합니다. 개발 도중에 콘솔에서 다음과 같은 문구를 볼 수 있습니다.
+<pre></code>Refused to load the stylesheet 'https://somedomain.net/bad.css' because it violates the following Content Security Policy directive: "style-src 'self' https://fonts.googleapis.com".</code></pre>
+자원(resource)을 로드하기 위해 차단된 요청에 주목하고 그에따라 Extension을 업데이트 하세요.
+
+기본적으로 다음의 경우를 제외하고 모든 자원은(assets) 트위치 CDN으로 로드돼야 합니다.
+   * HTTPS 또는 WSS endpoint와 연결할때 (ex : XHR의 목적으로)
+   * 이미지를 로드할때 (data URI 등 어디든)
+   * Google 글자체는(fonts) 글자체, stylesheet를 위해 유효한 자원으로서 허용됨
+
+또한 다음과 같은 제약사항을 따릅니다.
+   * 인라인(inline) JavaScript를 사용할 수 없습니다.
+   * HTTPS 또는 WSS와 같은 암호화된 프로토콜을 사용하지 않는 자원에는 접근이나 로드를 할 수 없습니다.
+   * Extension 존재하는 곳 외의 공간에서 Extension을 내장할 수 없습니다.
+
+더 자세한 사항은 https://content-security-policy.com 을 참조하세요.
