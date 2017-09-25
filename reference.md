@@ -1,9 +1,4 @@
-<style>
-table th{
-    background-color : #dad8de;
-    color : black;
-}
-</style>
+
 Extension Reference
 ===================
 이 레퍼런스는 Extension endpoints, [Javascript Helper](#javascript-helper), [JWT schema](#jwt-schema)에 대해 설명합니다.
@@ -358,6 +353,7 @@ Property     |Type|  Description
 `videoResolution` |string| 방송 화질
 
 <h3 id="send-functiontarget-contenttype-message">send: function(target, contentType, message)</h3>
+<<<<<<< HEAD
 
 이 함수는 곧바로 PubSub에 전달하기 위해 front-end에서 호출 될 수 있습니다. 
 
@@ -412,3 +408,5 @@ Schema Item  |Type|  Description
   }
 }
 ```
+=======
+>>>>>>> origin/master
