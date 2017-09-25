@@ -145,6 +145,7 @@ Managing Extension Versions
 자원(assets)을 트위치 CDN에 업로드할 준비가 됐다면 압축한 후 **Version Assets** 섹션에 업로드 하세요. 자원을 트위치 CDN에 업로드하기 전까지는 Extension Review 요청을 할 수 없습니다. 정보가 더 필요하다면 [Hosted Test](#hosted-test)을 참조하세요.
 
 <h3 id="extension-capabilities"> Extension Capabilities</h3>
+
 각 Extension은 고유합니다. 트위치는 Extension의 능력(potential)을 최대화하기 위한 선택가능한 보조기능(capabilities)을 가지고 있습니다. 이는 **Extension Capabilities** 섹션에 있습니다.
 
 * 자신의 Extension이 시청자의 트위치 숫자 ID를 알아야 한다면 **Request Identity Link** 박스에 체크하세요. 시청자가 트위치 ID 공유에 동의한다면 Extension Helper의 <code>onAuthorized()</code> 콜백 함수로 트위치 숫자 ID가 제공됩니다. 콜백 함수나 JWT 토큰에 대해 자세히 알고 싶다면 [Extensions Reference](https://dev.twitch.tv/docs/extensions/reference)를 참조하세요.
@@ -217,6 +218,7 @@ EBS는 API 호출을 위해 `external` 역할(role)로 JWT를 생성하고 서�
 원한다면 [Revoke Extension Secrets](https://dev.twitch.tv/docs/extensions/reference/#revoke-extension-secrets) endpoint 을 통해 모든 비밀키를 폐기할 수 있습니다.
 
 <h1 id="creating-your-extension-backend-service-ebs">Creating Your Extension Backend Service (EBS)</h1>
+
 EBS는 자신의 Extension을 지원하기 위한 backend 서비스입니다. EBS는 자신이 원하는 프로그래밍 언어로 작성 가능합니다. Extension 본질에 충실하도록 일반적으로 다음과 같은 기능이 요구됩니다.
 
 ### Verifying the JWT
@@ -274,6 +276,7 @@ EBS가 OAuth 콜백을 받고 접큰(access) 토큰을 받으면 [Set Extension 
 Extension을 생성할때 리다이렉트 URI가 https://localhost/ 로 설정된 OAuth 어플리케이션이 자동으로 등록됩니다. Extension을 hosted test 상태로 변경하면 이 리다이렉트 URI를 자신의 EBS가 호스팅되는 곳으로 설정해야 합니다. 
 
 <h3 id="required-configurations">Required Configurations</h3>
+
 원한다면 스트리머가 Extension을 활성화 하기 전에 적절하게 설정하도록 요구할 수 있습니다. 활성화된 Extension이 잘못 설정되어 시청자에게 혼란스런 에러 메시지를 출력하는 경우 유용합니다. **Required Configurations** 필드에 작성해서 스트리머 설정 요구사항을 강제할 수 있습니다. 이 필드에는 자신이 원하는 문자열 컨텐츠를 작성 가능합니다. 이 필드에 작성한 문자열을 사용해 버전마다 다른 설정을 쉽게 요구할 수 있습니다. 그래서 만약 새버전에서 재설정이 필요하면 스트리머는 새버전을 활성화하기 전에 재설정을 해야할 것입니다.
 
 채널에서 Extension에 대한 설정이 제대로 됐다고 EBS가 판단하면 [Set Extension Required Configuration](https://dev.twitch.tv/docs/extensions/reference/#set-extension-required-configuration) endpoint 를 호출하세요.
@@ -283,6 +286,7 @@ Testing Your Extension
 Extension을 생성하고 보조기능(capabilities) 세팅이 완료됐다면 개발 및 테스트가 준비된 것입니다. Extension 개발은 일반적으로 로컬에서 Extension과 EBS를 반복하며 개발합니다. 그 다음 hosted 상태로 전환하여 추가적인 테스트 및 확인을 합니다.
 
 <h3 id="local-test">Local Test</h3>
+
 로컬에서 테스트를 위해 Extension Boilerplate를 사용하거나 로컬 웹 서버 같은 것으로 본인 마음대로 할 수 있습니다. 몇몇 명령은 HTTPS를 필요로 하므로 자신의 시스템에 개인 인증서(self-signed certificate) 생성 및 설치를 해야합니다. 
 
 스트리머 대시보드에 있는 **Extension Manager** 에서 자신의 방송 채널에 Extension을 설치할 수 있습니다. Extension이 Local Test 또는 Hosted Test 모드인 동안 테스트 whitelist에 등록된 시청자들만 볼 수 있습니다. 그외 시청자는 Extension이 보이지 않습니다.
@@ -296,6 +300,7 @@ Extension을 생성하고 보조기능(capabilities) 세팅이 완료됐다면 �
 * Extension을 테스트하세요.
 
 <h3 id="hosted-test">Hosted Test</h3>
+
 트위치 CDN으로 Extension을 테스트할 준비가 됐다면   
 
 1. 디렉토리 구조를 유지하여 front-end 자원들을 모두 압축형식으로 만듭니다. 
